@@ -13,7 +13,7 @@ export class VectorDB {
     private table: lancedb.Table | null = null;
     private initPromise: Promise<void>;
 
-    constructor(dbPath: string = path.join(process.cwd(), 'data', 'lancedb')) {
+    private constructor(dbPath: string = path.join(process.cwd(), 'data', 'lancedb')) {
         const dir = path.dirname(dbPath);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
@@ -27,6 +27,12 @@ export class VectorDB {
         }
 
         this.initPromise = this.initialize(dbPath);
+    }
+
+    static async create(dbPath?: string): Promise<VectorDB> {
+        const instance = new VectorDB(dbPath);
+        await instance.initPromise;
+        return instance;
     }
 
     private async initialize(dbPath: string) {

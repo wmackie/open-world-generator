@@ -1,6 +1,8 @@
 import { EntityManager } from './managers';
 import { logger } from '../utils/logger';
 
+// IMPORTANT: All goal.duration_est values are in MINUTES
+// Do not use hours anywhere in the simulation system
 export interface SimulationResult {
     interrupt?: {
         reason: string;

@@ -95,9 +95,11 @@ export class ActionInterpreter {
             logger.error('ActionInterpreter', 'Failed to interpret action', error);
             // Fallback to treating as clear but unparsed, or throw? 
             // Better to fail safe.
+            // [FIX] Return gibberish on failure so system knows interpretation failed
             return {
-                understanding: 'CLEAR',
-                normalized_input: input // Best effort
+                understanding: 'GIBBERISH',
+                normalized_input: input,
+                gibberish_reason: 'Failed to parse action - system error'
             };
         }
     }

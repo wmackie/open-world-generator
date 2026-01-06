@@ -71,10 +71,12 @@ export class NarrativeEngine {
 
     constructor(dbPath?: string) {
         this.sqlite = new SQLiteDB(dbPath);
-        this.vector = new VectorDB(dbPath ? dbPath.replace('.db', '_lancedb') : undefined);
+        // VectorDB and MemorySystem are initialized in initialize()
+
         this.entityManager = new EntityManager(this.sqlite);
         this.locationManager = new LocationManager(this.entityManager);
-        this.memorySystem = new MemorySystem(this.sqlite, this.vector);
+        this.simulationManager = new SimulationManager(this.entityManager);
+        this.rippleEffectManager = new RippleEffectManager(this.sqlite);
 
         // Initialize LLM Provider
         const apiKey = process.env.GOOGLE_API_KEY || "";
@@ -88,12 +90,10 @@ export class NarrativeEngine {
         this.consequenceEngine = new ConsequenceEngine(this.llmProvider, this.promptManager);
         this.director = new Director(this.llmProvider);
         this.consistencyEnforcer = new ConsistencyEnforcer(this.sqlite, this.llmProvider, this.promptManager);
-        this.simulationManager = new SimulationManager(this.entityManager);
         this.narrator = new Narrator(this.llmProvider, this.promptManager);
         this.opportunityGenerator = new OpportunityGenerator(this.llmProvider);
         this.plausibilityChecker = new PlausibilityChecker(apiKey, this.genreManager, this.promptManager);
         this.actionInterpreter = new ActionInterpreter(this.llmProvider, this.promptManager);
-        this.rippleEffectManager = new RippleEffectManager(this.sqlite);
         this.npcAgencySystem = new NPCAgencySystem(this.llmProvider, this.promptManager, this.entityManager); // NEW
         this.entityInstantiation = new EntityInstantiationSystem(this.llmProvider, this.entityManager, this.genreManager);
         this.scenarioGenerator = new ScenarioGenerator(this.llmProvider, this.promptManager, this.genreManager);
@@ -106,9 +106,21 @@ export class NarrativeEngine {
         this.modules.forEach(m => this.moduleSettings.set(m.name, true));
 
         // Try to restore state
-
-        // Try to restore state
         this.loadPersistedSettings();
+    }
+
+    async initialize() {
+        // Async Initialization of VectorDB
+        const dbPath = this.sqlite['db'].name; // Access internal DB filename or reconstruct path
+        // sqlite.name isn't standard property of better-sqlite3 wrapper, but let's assume standard path if undefined
+        // Actually this.sqlite has no public path accessor. 
+        // Default path usage:
+        const defaultPath = path.join(process.cwd(), 'data', 'world.db');
+        const targetPath = dbPath && dbPath !== ':memory:' ? dbPath : defaultPath;
+
+        this.vector = await VectorDB.create(targetPath.replace('.db', '_lancedb'));
+        this.memorySystem = new MemorySystem(this.sqlite, this.vector);
+        logger.info('NarrativeEngine', 'Async components initialized');
     }
 
 
@@ -125,15 +137,21 @@ export class NarrativeEngine {
             return false;
         }
 
+        const backupPath = dbPath + '.backup';
         try {
-            // 1. Close existing connection to unlock the file
+            // 1. Create safety backup of current state
+            if (fs.existsSync(dbPath)) {
+                fs.copyFileSync(dbPath, backupPath);
+            }
+
+            // 2. Close existing connection
             this.sqlite.close();
 
-            // 2. Perform the file copy
+            // 3. Perform the restoration
             fs.copyFileSync(savePath, dbPath);
             logger.info('NarrativeEngine', `Restored database from ${filename}`);
 
-            // 3. Re-initialize connections
+            // 4. Re-initialize connections
             this.sqlite = new SQLiteDB(dbPath);
 
             // Re-bind managers to the new DB instance
@@ -141,32 +159,49 @@ export class NarrativeEngine {
             this.consistencyEnforcer = new ConsistencyEnforcer(this.sqlite, this.llmProvider, this.promptManager);
             this.rippleEffectManager = new RippleEffectManager(this.sqlite);
 
-            // We also need to update the various managers that might depend on the specific sqlite instance
-            // Ideally managers should just take sqlite in constructor. 
-            // Checking constructor calls...
-            // LocationManager uses EntityManager, which we just refreshed.
+            // Managers needing refresh
             this.locationManager = new LocationManager(this.entityManager);
 
-            // MemorySystem - uses SQLite
+            // MemorySystem typically needs vector sync too, but for now we reuse the vector instance
+            // as it connects to the semantic DB which might verify or not. 
+            // Re-instantiate MemorySystem to bind new SQLite
             this.memorySystem = new MemorySystem(this.sqlite, this.vector);
 
-            // SimulationManager uses EntityManager
             this.simulationManager = new SimulationManager(this.entityManager);
 
             // Resync state
             this.currentTurn = turnNumber;
 
-            // Reload global settings like Genre which might have been different in that snapshot
+            // Reload global settings
             await this.loadPersistedSettings();
+
+            // Success - cleanup backup
+            if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);
 
             return true;
         } catch (e) {
             logger.error('NarrativeEngine', `Failed to load snapshot ${turnNumber}`, e);
-            // Try to recover by reopening the DB at least?
+
+            // Recovery: restore from backup
             try {
-                this.sqlite = new SQLiteDB(dbPath);
+                if (fs.existsSync(backupPath)) {
+                    logger.info('NarrativeEngine', 'Attempting recovery from backup...');
+                    fs.copyFileSync(backupPath, dbPath);
+                    this.sqlite = new SQLiteDB(dbPath);
+
+                    // Re-bind everything again to backup state
+                    this.entityManager = new EntityManager(this.sqlite);
+                    this.consistencyEnforcer = new ConsistencyEnforcer(this.sqlite, this.llmProvider, this.promptManager);
+                    this.rippleEffectManager = new RippleEffectManager(this.sqlite);
+                    this.locationManager = new LocationManager(this.entityManager);
+                    this.memorySystem = new MemorySystem(this.sqlite, this.vector);
+                    this.simulationManager = new SimulationManager(this.entityManager);
+
+                    fs.unlinkSync(backupPath);
+                    logger.info('NarrativeEngine', 'Recovery successful');
+                }
             } catch (recoveryErr) {
-                logger.error('NarrativeEngine', `Critical failure: Could not reopen DB after failed load`, recoveryErr);
+                logger.error('NarrativeEngine', `CRITICAL: Recovery failed`, recoveryErr);
             }
             return false;
         }
@@ -319,13 +354,7 @@ export class NarrativeEngine {
 
         // 1. Expiration Check (Design Doc 6.9)
         const initialCount = activeOpportunities.length;
-        activeOpportunities = activeOpportunities.filter(op => {
-            if (op.expires_at && this.worldTime >= op.expires_at) {
-                logger.info('NarrativeEngine', 'Opportunity Expired', { id: op.description, turn: this.currentTurn });
-                return false;
-            }
-            return true;
-        });
+        activeOpportunities = this.filterExpiredOpportunities(activeOpportunities);
 
         // --- Action Interpreter Layer ---
         const player = this.entityManager.getEntity(this.playerId) as any; // Force Any
@@ -435,6 +464,24 @@ export class NarrativeEngine {
 
             // 3. Execute Travel
             if (targetLocationId) {
+                // Bidirectional link: connect new location back to current
+                const currentLoc = this.entityManager.getEntity(currentLocId);
+                if (currentLoc && currentLoc.entity_type === 'location') {
+                    if (!currentLoc.connected_location_ids.includes(targetLocationId)) {
+                        currentLoc.connected_location_ids.push(targetLocationId);
+                        this.entityManager.updateEntity(currentLocId, currentLoc);
+                    }
+                }
+
+                // Also ensure new location links back
+                const newLoc = this.entityManager.getEntity(targetLocationId);
+                if (newLoc && newLoc.entity_type === 'location') {
+                    if (!newLoc.connected_location_ids.includes(currentLocId)) {
+                        newLoc.connected_location_ids.push(currentLocId);
+                        this.entityManager.updateEntity(targetLocationId, newLoc);
+                    }
+                }
+
                 // Move Player
                 const travelTime = 15; // Simple for now
                 this.worldTime += travelTime;
@@ -1204,5 +1251,18 @@ export class NarrativeEngine {
      */
     getModuleStatus(moduleName: string): boolean {
         return this.moduleSettings.get(moduleName) ?? true; // Default true if not set
+    }
+
+    private filterExpiredOpportunities(opportunities: any[]): any[] {
+        return opportunities.filter(op => {
+            if (op.expires_at && this.worldTime >= op.expires_at) {
+                logger.info('NarrativeEngine', 'Opportunity Expired', {
+                    id: op.description,
+                    turn: this.currentTurn
+                });
+                return false;
+            }
+            return true;
+        });
     }
 }

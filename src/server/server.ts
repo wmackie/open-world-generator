@@ -277,7 +277,12 @@ app.post('/api/settings', (req, res) => {
 });
 
 // Start Server
-app.listen(port, () => {
-    console.log(`IF Engine Server running at http://localhost:${port}`);
-    logger.info('Server', `Server started on port ${port}`);
+engine.initialize().then(() => {
+    app.listen(port, () => {
+        console.log(`IF Engine Server running at http://localhost:${port}`);
+        logger.info('Server', `Server started on port ${port}`);
+    });
+}).catch(err => {
+    logger.error('Server', 'Failed to initialize engine', err);
+    process.exit(1);
 });

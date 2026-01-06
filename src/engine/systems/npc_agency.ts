@@ -102,7 +102,14 @@ export class NPCAgencySystem {
             if (cleanText.startsWith('```json')) cleanText = cleanText.replace(/```json/g, '').replace(/```/g, '');
 
             const result = JSON.parse(cleanText);
-            const actions = result.npc_actions || [];
+
+            // [FIX] Validate structure
+            if (!result.npc_actions || !Array.isArray(result.npc_actions)) {
+                logger.warn('NPCAgencySystem', 'Invalid LLM response structure', { result });
+                return [];
+            }
+
+            const actions = result.npc_actions;
 
             // Meaningful Actions
             const meaningfulActions = actions.filter((a: NPCAction) => a.action_type !== 'IDLE');

@@ -7,18 +7,39 @@ export class EntityManager {
     constructor(private db: SQLiteDB) { }
 
     createEntity(entity: Entity): void {
+        // [FIX] Validate schema before write to prevent corruption
+        // Note: Using passthrough() or loose validation might be safer for prototype iterating if Zod is too strict,
+        // but recommendation was to parse.
+        // EntitySchema is a union, so parse should handle it.
+
+        /* 
+           NOTE: We use a try/catch or safeParse normally, but the request was:
+           const validated = EntitySchema.parse(entity);
+        */
+        let processedEntity = entity;
+        try {
+            // We can't strictly enforce it if strict schema doesn't match prototype flux.
+            // But let's try. If it throws, it saves us from bad data.
+            processedEntity = EntitySchema.parse(entity) as Entity;
+        } catch (e) {
+            logger.warn('EntityManager', `Schema Validation Failed for ${entity.entity_id}`, { error: e });
+            // For now, in prototype, maybe we don't block? 
+            // The recommendation said "Throws if invalid". So we throw.
+            throw e;
+        }
+
         const stmt = this.db['db'].prepare(`
       INSERT OR REPLACE INTO entities (entity_id, entity_type, entity_data, last_modified)
       VALUES (?, ?, ?, ?)
     `);
 
         stmt.run(
-            entity.entity_id,
-            entity.entity_type,
-            JSON.stringify(entity),
+            processedEntity.entity_id,
+            processedEntity.entity_type,
+            JSON.stringify(processedEntity),
             new Date().toISOString()
         );
-        logger.debug('EntityManager', `Created entity ${entity.entity_id}`);
+        logger.debug('EntityManager', `Created entity ${processedEntity.entity_id}`);
     }
 
     getEntity(entityId: string): Entity | null {

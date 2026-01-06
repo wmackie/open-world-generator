@@ -54,6 +54,11 @@ Weave this event naturally into the prose. Match the severity!
             const castLines = worldContext.npcs.map((npc: any) => {
                 const name = getEntityName(npc);
 
+                // [FIX] Defensive guard for skeleton NPCs
+                if (!npc.appearance && !npc.voice && !npc.speech_style) {
+                    return `- ${name}: (No voice data)`;
+                }
+
                 // Try to find voice data in various locations (schema drift handling)
                 // V5 Schema: speech_style { reference, tone_tags }
                 // V4 Schema: voice { style, sample_line }
