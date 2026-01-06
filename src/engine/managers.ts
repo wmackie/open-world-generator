@@ -1,6 +1,7 @@
 import { SQLiteDB } from '../db/sqlite';
 import { Entity, EntitySchema } from '../types/schemas';
 import { logger } from '../utils/logger';
+import { getEntityName } from '../utils/entity_helpers';
 
 export class EntityManager {
     constructor(private db: SQLiteDB) { }
@@ -60,7 +61,7 @@ export class EntityManager {
         const rows = this.db['db'].prepare('SELECT entity_id, entity_type, entity_data FROM entities WHERE entity_type IN (?, ?)').all('npc', 'creature') as any[];
         return rows.map(r => {
             const data = JSON.parse(r.entity_data);
-            const name = (typeof data.name === 'string') ? data.name : (data.name?.display || "Unknown");
+            const name = getEntityName(data);
             return { id: r.entity_id, name: name, type: r.entity_type };
         });
     }

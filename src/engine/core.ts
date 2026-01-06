@@ -21,6 +21,7 @@ import { NPCAgencySystem } from './systems/npc_agency'; // NEW
 import { GenreManager } from './genre_manager';
 import { PromptManager } from './prompts/prompt_manager';
 import { ScenarioGenerator, StartingScenario } from './scenario_generator';
+import { getEntityName, getEntityNames } from '../utils/entity_helpers';
 
 import { RippleEffectManager } from './ripple_effect_manager';
 
@@ -64,7 +65,6 @@ export class NarrativeEngine {
         this.gameId = id;
         logger.info('NarrativeEngine', `Game ID set to: ${this.gameId}`);
     }
-
     // Module Management
     // public modules is already declared above at line 51
     private moduleSettings: Map<string, boolean> = new Map(); // Track enabled/disabled state
@@ -391,6 +391,11 @@ export class NarrativeEngine {
         // --- SPEC 3.0: DYNAMIC TRAVEL & LOCATION GENERATION ---
         if (interpretation.travel_intent && interpretation.target_location) {
             logger.info('NarrativeEngine', `Dynamic Travel Triggered`, { target: interpretation.target_location });
+            let departureMsg = "";
+            if (npcsInScene.length > 0) {
+                const names = getEntityNames(npcsInScene);
+                departureMsg = `You say goodbye to ${names}.\n\n`;
+            }
 
             // 1. Check if location exists (Fuzzy Match)
             let targetLocationId: string | null = null;
@@ -431,6 +436,8 @@ export class NarrativeEngine {
             // 3. Execute Travel
             if (targetLocationId) {
                 // Move Player
+                const travelTime = 15; // Simple for now
+                this.worldTime += travelTime;
                 // FIX: Safe state update (read-modify-write)
                 const player = this.entityManager.getEntity(this.playerId);
                 if (player && player.entity_type === 'player') {
@@ -440,7 +447,7 @@ export class NarrativeEngine {
 
                 // Generate Travel Narrative
                 // For now, we return a special narrative indicating travel, effectively skipping the standard consequence engine for this turn.
-                const travelNarrative = `You make your way to **${interpretation.target_location}**.`;
+                const travelNarrative = departureMsg + `You make your way to **${interpretation.target_location}**. ${travelTime} minutes later, you arrive.`;
 
                 return {
                     narrative: travelNarrative,
@@ -594,20 +601,10 @@ export class NarrativeEngine {
                 const activeTone = this.genreManager.getEffectiveTone();
                 narrative = await this.narrator.generateNarration(moveConsequence, processedInput, context, activeTone, undefined);
 
-                const knownNames = safeEntitiesInRoom.map((e: any) => {
-                    if (typeof e.name === 'string') return e.name;
-                    return e.name?.display || e.name?.first || "Unknown";
-                });
+                const knownNames = safeEntitiesInRoom.map(getEntityName);
                 // [FIX] Pass player name to forbid extraction
                 const playerEntity = this.entityManager.getEntity(this.playerId);
-                let playerName = "Player";
-                if (playerEntity) {
-                    if (typeof playerEntity.name === 'string') {
-                        playerName = playerEntity.name;
-                    } else {
-                        playerName = playerEntity.name.display || playerEntity.name.first || "Player";
-                    }
-                }
+                const playerName = getEntityName(playerEntity) || "Player";
 
                 await this.entityInstantiation.processNarrative(narrative, targetLocId, knownNames, [playerName]);
 
@@ -977,21 +974,11 @@ export class NarrativeEngine {
                     // [REORDERED]: Instantiation now runs AFTER Validation/Correction
                     // This prevents hallucinated objects from being created in the DB
                     if (locationValidator && locationValidator.entity_type === 'location') {
-                        const knownNames = [...npcsInScene, ...objectsInScene].map((e: any) => {
-                            if (typeof e.name === 'string') return e.name;
-                            return e.name?.display || e.name?.first || "Unknown";
-                        });
+                        const knownNames = [...npcsInScene, ...objectsInScene].map(getEntityName);
 
                         // [FIX] Pass player name to forbid extraction
                         const playerEntity = this.entityManager.getEntity(this.playerId);
-                        let playerName = "Player";
-                        if (playerEntity) {
-                            if (typeof playerEntity.name === 'string') {
-                                playerName = playerEntity.name;
-                            } else {
-                                playerName = playerEntity.name.display || playerEntity.name.first || "Player";
-                            }
-                        }
+                        const playerName = getEntityName(playerEntity) || "Player";
 
                         await this.entityInstantiation.processNarrative(narrative, locationValidator.entity_id, knownNames, [playerName]);
                     }

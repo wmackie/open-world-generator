@@ -3,6 +3,7 @@ import { PromptManager } from './prompts/prompt_manager';
 import { GenreManager } from './genre_manager';
 import { GeminiProvider } from '../llm/gemini.provider';
 import { logger } from '../utils/logger';
+import { getEntityName } from '../utils/entity_helpers';
 
 export interface StartingScenario {
     location: {
@@ -127,7 +128,7 @@ export class ScenarioGenerator {
                 return {
                     entity_id: `${newLocationEntity.entity_id}_ent_${idx}`,
                     entity_type: ent.type,
-                    name: ent.name, // Simplified name structure for dynamic entities
+                    name: { display: ent.name, first: ent.name.split(' ')[0], known_to_player: false },
                     // Ideally we'd map to { display: ent.name } but let's stick to simple string for core.ts compatibility unless updated
                     description: entDesc,
                     state: {

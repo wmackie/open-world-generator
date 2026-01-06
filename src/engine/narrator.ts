@@ -2,6 +2,7 @@ import { ILLMProvider } from '../llm/provider.interface';
 import { logger } from '../utils/logger';
 
 import { PromptManager } from './prompts/prompt_manager';
+import { getEntityName } from '../utils/entity_helpers';
 
 export class Narrator {
     private llmProvider: ILLMProvider;
@@ -51,7 +52,7 @@ Weave this event naturally into the prose. Match the severity!
         let castList = "None";
         if (worldContext.npcs && Array.isArray(worldContext.npcs) && worldContext.npcs.length > 0) {
             const castLines = worldContext.npcs.map((npc: any) => {
-                const name = (typeof npc.name === 'string' ? npc.name : (npc.name?.display || npc.name?.first || "Unknown"));
+                const name = getEntityName(npc);
 
                 // Try to find voice data in various locations (schema drift handling)
                 // V5 Schema: speech_style { reference, tone_tags }

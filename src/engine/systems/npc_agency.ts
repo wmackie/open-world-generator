@@ -1,5 +1,6 @@
 
 import { ILLMProvider } from '../../llm/provider.interface';
+import { getEntityName } from '../../utils/entity_helpers';
 import { PromptManager } from '../prompts/prompt_manager';
 import { logger } from '../../utils/logger';
 import { EntityManager } from '../managers';
@@ -46,12 +47,7 @@ export class NPCAgencySystem {
 
         // 2. Build Roster String
         const roster = activeNPCs.map(npc => {
-            let name = "Unknown";
-            if (typeof npc.name === 'string') {
-                name = npc.name;
-            } else if (npc.name && typeof npc.name === 'object') {
-                name = npc.name.display || npc.name.first || "Unknown";
-            }
+            const name = getEntityName(npc);
 
             const status = npc.state?.status || "Active";
             const currentAction = npc.state?.current_action?.description || "Idle";

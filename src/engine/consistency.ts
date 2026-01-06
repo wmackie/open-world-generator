@@ -1,4 +1,5 @@
 import { SQLiteDB } from '../db/sqlite';
+import { getEntityName } from '../utils/entity_helpers';
 import { logger } from '../utils/logger';
 import { EntityManager } from './managers';
 import { PromptManager } from './prompts/prompt_manager';
@@ -123,7 +124,7 @@ export class ConsistencyEnforcer {
 
         const entitiesList = presentEntities.map(e => {
             const action = (e.state?.current_action?.description) ? `(Action: ${e.state.current_action.description})` : "";
-            return `- ${e.name.display || e.name} ${action}`;
+            return `- ${getEntityName(e)} ${action}`;
         }).join('\n');
 
         const npcActionList = context.npcActions.map((a: any) =>
