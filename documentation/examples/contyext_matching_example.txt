@@ -1,0 +1,138 @@
+{
+  "runSettings": {
+    "temperature": 1.0,
+    "model": "models/gemini-2.5-flash",
+    "topP": 0.95,
+    "topK": 64,
+    "maxOutputTokens": 65536,
+    "safetySettings": [{
+      "category": "HARM_CATEGORY_HARASSMENT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_HATE_SPEECH",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+      "threshold": "OFF"
+    }],
+    "enableCodeExecution": false,
+    "enableSearchAsATool": false,
+    "enableBrowseAsATool": false,
+    "enableAutoFunctionResponse": false,
+    "thinkingBudget": -1,
+    "outputResolution": "1K"
+  },
+  "systemInstruction": {
+  },
+  "chunkedPrompt": {
+    "chunks": [{
+      "text": "You are an AI storyteller and I am a character named Hannah. The genre is \"slice of life.\" No magic, no escalating threats, just normal day to day stuff, some drama, some romance, some goals and dreams that will probably be defeated by the boring grind of everyday life.\nReady to start?\n",
+      "role": "user",
+      "tokenCount": 65
+    }, {
+      "text": "**Crafting a Narrative**\n\nI\u0027m now fully immersed in the project. My primary focus is on bringing the slice-of-life genre to life for Hannah, ensuring a relatable, threat-free experience centered around everyday occurrences. The goal is crafting a realistic, day-to-day story.\n\n\n**Defining Hannah\u0027s World**\n\nThe focus is now on establishing Hannah\u0027s world. I\u0027ve begun to craft a typical morning scene, aiming for relatability and realism. The aim is to weave in the bittersweet aspects of everyday life, alluding to her aspirations and the subtle challenges of daily routine. The idea is to subtly incorporate the mundane, with a hint of larger context, to prompt a reaction or choice. I\u0027m aiming for subtle character development via actions in the story.\n\n\n**Refining the Opening Scene**\n\nNow I\u0027m reworking the opening scene. I\u0027ve decided to refine the initial setup to be more specific to Hannah\u0027s typical routine, aiming for a relatable and grounded introduction. The goal is to build a foundation for slice-of-life storytelling. I\u0027m focusing on creating an authentic morning atmosphere. I\u0027m introducing relatable details and hinting at the subtle bittersweet elements of everyday life. I\u0027m also ensuring a small choice immediately presents itself to Hannah (the user) so she can engage with the narrative.\n\n\n**Developing the First Scene**\n\nNow, I\u0027m fully immersed in crafting the opening. I\u0027ve re-imagined the initial scene to be more evocative and relatable, avoiding generic descriptions. The aim is to create an immediate sense of immersion. My focus is on Hannah\u0027s typical morning, including specific details about her environment and mood. A small dilemma now presents itself, one which is both relevant to Hannah and invites the user into the narrative.\n\n\n",
+      "role": "model",
+      "tokenCount": 685,
+      "isThought": true,
+      "thinkingBudget": -1,
+      "parts": [{
+        "text": "**Crafting a Narrative**\n\nI\u0027m now fully immersed in the project. My primary focus is on bringing the slice-of-life genre to life for Hannah, ensuring a relatable, threat-free experience centered around everyday occurrences. The goal is crafting a realistic, day-to-day story.\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Defining Hannah\u0027s World**\n\nThe focus is now on establishing Hannah\u0027s world. I\u0027ve begun to craft a typical morning scene, aiming for relatability and realism. The aim is to weave in the bittersweet aspects of everyday life, alluding to her aspirations and the subtle challenges of daily routine. The idea is to subtly incorporate the mundane, with a hint of larger context, to prompt a reaction or choice. I\u0027m aiming for subtle character development via actions in the story.\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Refining the Opening Scene**\n\nNow I\u0027m reworking the opening scene. I\u0027ve decided to refine the initial setup to be more specific to Hannah\u0027s typical routine, aiming for a relatable and grounded introduction. The goal is to build a foundation for slice-of-life storytelling. I\u0027m focusing on creating an authentic morning atmosphere. I\u0027m introducing relatable details and hinting at the subtle bittersweet elements of everyday life. I\u0027m also ensuring a small choice immediately presents itself to Hannah (the user) so she can engage with the narrative.\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Developing the First Scene**\n\nNow, I\u0027m fully immersed in crafting the opening. I\u0027ve re-imagined the initial scene to be more evocative and relatable, avoiding generic descriptions. The aim is to create an immediate sense of immersion. My focus is on Hannah\u0027s typical morning, including specific details about her environment and mood. A small dilemma now presents itself, one which is both relevant to Hannah and invites the user into the narrative.\n\n\n",
+        "thought": true
+      }]
+    }, {
+      "text": "Welcome, Hannah. I\u0027m ready to weave a story with you.\n\nThe pale morning light, diffused through your slightly grubby window blinds, was more of a suggestion than a command. Your alarm, set to a chirpy bird song that had long lost its appeal, was just about to hit its crescendo. You could already hear Mrs. Henderson’s yappy terrier, Muffin, starting his daily performance downstairs, a tiny, insistent drumbeat against the quiet of your building. Another Tuesday.\n\nYour phone, vibrating softly on the bedside table, probably held a message from Chloe about last night\u0027s episode of \u0027The Crown\u0027 or maybe an email from work that could definitely wait. The faint, comforting smell of stale coffee from yesterday\u0027s pot in the kitchen was just barely detectable, battling with the even fainter aroma of the bakery truck that usually rumbled by around this time, a cruel tease of fresh bread you rarely had time for.\n\nYou stretch, feeling the familiar aches of someone who spends too much time hunched over. What\u0027s the first thing you reach for this morning, Hannah? Your phone, your coffee, or something else entirely?",
+      "role": "model",
+      "finishReason": "STOP",
+      "tokenCount": 239,
+      "parts": [{
+        "text": "Welcome, Hannah. I\u0027m ready to weave a story with you.\n\nThe pale morning light, diffused through your slightly grubby window blinds, was more of a suggestion than a command. Your alarm, set to a chirpy bird song that"
+      }, {
+        "text": " had long lost its appeal, was just about to hit its crescendo. You could already hear Mrs. Henderson’s yappy terrier, Muffin, starting his daily performance downstairs, a tiny, insistent drumbeat against the quiet of your building"
+      }, {
+        "text": ". Another Tuesday.\n\nYour phone, vibrating softly on the bedside table, probably held a message from Chloe about last night\u0027s episode of \u0027The Crown\u0027 or maybe an email from work that could definitely wait. The faint, comforting smell of stale coffee"
+      }, {
+        "text": " from yesterday\u0027s pot in the kitchen was just barely detectable, battling with the even fainter aroma of the bakery truck that usually rumbled by around this time, a cruel tease of fresh bread you rarely had time for.\n\nYou stretch, feeling"
+      }, {
+        "text": " the familiar aches of someone who spends too much time hunched over. What\u0027s the first thing you reach for this morning, Hannah? Your phone, your coffee, or something else entirely?"
+      }]
+    }, {
+      "text": "I answer the text message from her\n",
+      "role": "user",
+      "tokenCount": 9
+    }, {
+      "text": "**Deciding the Response**\n\nI\u0027m focusing now on Hannah\u0027s response to Chloe\u0027s text. It\u0027s a key chance to reveal something about her personality and relationship with Chloe. I\u0027m starting to consider the context; the text likely concerns \"The Crown\".\n\n\n**Crafting a Reply**\n\nI\u0027m now zeroing in on Hannah\u0027s specific response to Chloe\u0027s \"Crown\" text.  I\u0027ve decided that Chloe\u0027s going to be a bit over-the-top, giving Hannah the perfect chance to be more grounded but still enthusiastic. This gives them a nice balance and shows they\u0027re both friends and individuals.\n\n\n",
+      "role": "model",
+      "tokenCount": 185,
+      "isThought": true,
+      "thinkingBudget": -1,
+      "parts": [{
+        "text": "**Deciding the Response**\n\nI\u0027m focusing now on Hannah\u0027s response to Chloe\u0027s text. It\u0027s a key chance to reveal something about her personality and relationship with Chloe. I\u0027m starting to consider the context; the text likely concerns \"The Crown\".\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Crafting a Reply**\n\nI\u0027m now zeroing in on Hannah\u0027s specific response to Chloe\u0027s \"Crown\" text.  I\u0027ve decided that Chloe\u0027s going to be a bit over-the-top, giving Hannah the perfect chance to be more grounded but still enthusiastic. This gives them a nice balance and shows they\u0027re both friends and individuals.\n\n\n",
+        "thought": true
+      }]
+    }, {
+      "text": "Your fingers instinctively find the phone. Before the bird song hits its peak, you\u0027ve snagged it, eyes still mostly closed against the nascent light. Sure enough, it’s Chloe, a flurry of capital letters and emojis.\n\n**Chloe (7:03 AM):** OMG HANNAH DID YOU SEE THAT ENDING LAST NIGHT??! I literally couldn\u0027t even. Charles is SUCH a tool. My heart broke for Diana all over again 😭 We HAVE to discuss later!\n\nYou manage a small, tired smile. Chloe\u0027s dramatic flair was endearing, if a little much before you\u0027d even had coffee. Your thumb hovers over the keyboard, a familiar ritual of waking up and rejoining the world.\n\nWhat do you text back to Chloe, Hannah? And what\u0027s your next move after that brief digital interaction? The bird song alarm is just starting its final, most insistent chirp.",
+      "role": "model",
+      "finishReason": "STOP",
+      "tokenCount": 189,
+      "parts": [{
+        "text": "Your fingers instinctively find the phone. Before the bird song hits its peak, you\u0027ve snagged it, eyes still mostly closed against the nascent light. Sure enough, it’s Chloe, a flurry of capital letters and emojis.\n\n**Chloe"
+      }, {
+        "text": " (7:03 AM):** OMG HANNAH DID YOU SEE THAT ENDING LAST NIGHT??! I literally couldn\u0027t even. Charles is SUCH a tool. My heart broke for Diana all over again 😭 We HAVE to"
+      }, {
+        "text": " discuss later!\n\nYou manage a small, tired smile. Chloe\u0027s dramatic flair was endearing, if a little much before you\u0027d even had coffee. Your thumb hovers over the keyboard, a familiar ritual of waking up and re"
+      }, {
+        "text": "joining the world.\n\nWhat do you text back to Chloe, Hannah? And what\u0027s your next move after that brief digital interaction? The bird song alarm is just starting its final, most insistent chirp."
+      }]
+    }, {
+      "text": "Ugh, so annoying! I shut it off\n",
+      "role": "user",
+      "tokenCount": 12
+    }, {
+      "text": "**Recognizing Morning Quiet**\n\nThe satisfying silence after the alarm is a clear starting point. Now, I\u0027m thinking about how to seamlessly transition into the day, considering it\u0027s a slice-of-life scenario. I need to make the next prompt about Chloe\u0027s text.\n\n\n**Analyzing Post-Alarm Actions**\n\nI\u0027ve acknowledged the peace after the alarm. My current focus is on how to integrate Chloe\u0027s incoming text into Hannah\u0027s immediate morning actions. The slice-of-life framework requires realism, so I\u0027m considering whether Hannah interacted with her phone before fully silencing the alarm. Based on the provided context, I\u0027m assuming she didn\u0027t reply and am preparing to prompt for Hannah\u0027s next physical move.\n\n\n",
+      "role": "model",
+      "tokenCount": 159,
+      "isThought": true,
+      "thinkingBudget": -1,
+      "parts": [{
+        "text": "**Recognizing Morning Quiet**\n\nThe satisfying silence after the alarm is a clear starting point. Now, I\u0027m thinking about how to seamlessly transition into the day, considering it\u0027s a slice-of-life scenario. I need to make the next prompt about Chloe\u0027s text.\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Analyzing Post-Alarm Actions**\n\nI\u0027ve acknowledged the peace after the alarm. My current focus is on how to integrate Chloe\u0027s incoming text into Hannah\u0027s immediate morning actions. The slice-of-life framework requires realism, so I\u0027m considering whether Hannah interacted with her phone before fully silencing the alarm. Based on the provided context, I\u0027m assuming she didn\u0027t reply and am preparing to prompt for Hannah\u0027s next physical move.\n\n\n",
+        "thought": true
+      }]
+    }, {
+      "text": "You stab a finger at the screen, silencing the insistent chirping mid-note. The sudden quiet is a blessed relief, broken only by the continued, distant yapping of Muffin. You didn\u0027t even manage to send a reply to Chloe, the alarm\u0027s grating presence taking precedence. The phone screen still glows with Chloe\u0027s dramatic declaration, a little beacon of the day\u0027s first social obligation.\n\nThe duvet is still warm and inviting, a soft barrier between you and the cool air of your room. You push yourself up onto your elbows, letting the blood flow back into your arms.\n\nDo you finally text Chloe back now, Hannah, or is there something else more pressing that calls your attention in these first moments of the day?",
+      "role": "model",
+      "finishReason": "STOP",
+      "tokenCount": 154,
+      "parts": [{
+        "text": "You stab a finger at the screen, silencing the insistent chirping mid-note. The sudden quiet is a blessed relief, broken only by the continued, distant yapping of Muffin. You didn\u0027t even manage to send a reply to Chloe,"
+      }, {
+        "text": " the alarm\u0027s grating presence taking precedence. The phone screen still glows with Chloe\u0027s dramatic declaration, a little beacon of the day\u0027s first social obligation.\n\nThe duvet is still warm and inviting, a soft barrier between you and the cool"
+      }, {
+        "text": " air of your room. You push yourself up onto your elbows, letting the blood flow back into your arms.\n\nDo you finally text Chloe back now, Hannah, or is there something else more pressing that calls your attention in these first moments of the day"
+      }, {
+        "text": "?"
+      }]
+    }],
+    "pendingInputs": [{
+      "text": "",
+      "role": "user"
+    }]
+  }
+}

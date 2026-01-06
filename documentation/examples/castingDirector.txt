@@ -1,0 +1,339 @@
+import { NPC, NPCRequest, DirectorMinorNPCRequest, GroundTruth } from '../types';
+import { Gemini } from '../core/gemini';
+import { Database } from '../core/database';
+import { TraitGenerator, PersonalityScaffold } from '../utils/traitGenerator';
+import { PromptArchitect } from './promptArchitect';
+import { v4 as uuidv4 } from 'uuid';
+const forbiddenNames = require('../config/forbidden_names.json');
+
+export class CastingDirector {
+    private gemini: Gemini;
+    private db: Database;
+    private traitGenerator: TraitGenerator;
+    private promptArchitect: PromptArchitect;
+
+    constructor(db: Database) {
+        this.gemini = new Gemini();
+        this.db = db;
+        this.traitGenerator = new TraitGenerator();
+        this.promptArchitect = new PromptArchitect();
+    }
+
+    async castNPC(
+        request: NPCRequest,
+        groundTruth: GroundTruth
+    ): Promise<NPC> {
+        console.log(`[CASTING DEBUG] castNPC called for: ${JSON.stringify(request)}`);
+        // 1. Check for existing NPC match
+        // PRIORITY: specific name constraint
+        let existingNPC = request.constraints?.name
+            ? groundTruth.npcs.find(n => n.name.display.toLowerCase() === request.constraints!.name!.toLowerCase())
+            : undefined;
+
+        // FALLBACK: fuzzy concept match (if name logic fails but concept is strong? rare usage)
+        if (!existingNPC && request.concept) {
+            existingNPC = groundTruth.npcs.find(n =>
+                n && n.name && n.name.display.length > 2 &&
+                request.concept!.toLowerCase().includes(n.name.display.toLowerCase())
+            );
+        }
+
+        if (existingNPC) {
+            console.log(`[CASTING DIRECTOR] 🎬 Recasting existing NPC: ${existingNPC.name.display} (matched request)`);
+            return existingNPC;
+        }
+
+        // 2. If no match, create new via Audition
+        return this.createNPC(request, groundTruth);
+    }
+
+    private async createNPC(
+        request: DirectorMinorNPCRequest | NPCRequest,
+        groundTruth: GroundTruth
+    ): Promise<NPC> {
+        const tier = (request as any).tier || 'minor';
+
+        if (tier === 'minor') {
+            return this.createMinorNPC(request as DirectorMinorNPCRequest, groundTruth);
+        } else {
+            return this.createMajorNPC(request as NPCRequest, groundTruth);
+        }
+    }
+
+    private async createMinorNPC(
+        request: DirectorMinorNPCRequest,
+        groundTruth: GroundTruth
+    ): Promise<NPC> {
+        console.log(`[CASTING DIRECTOR] 🏗️ Executing blueprint for MINOR Role: ${request.archetype_role}...`);
+
+        const context = this.promptArchitect.buildMinorNPCCreatorPrompt(request, groundTruth);
+
+        try {
+            const llmResponse = await this.gemini.generateJSON<any>(context, 'CastingDirector');
+
+            // MAPPING TO SYSTEM NPC STRUCTURE
+            const npc: NPC = {
+                id: `npc-${uuidv4()}`,
+                created_turn: groundTruth.narrative_history.length + 1,
+                name: {
+                    first: llmResponse.name.first,
+                    display: llmResponse.name.display,
+                    known_to_player: false // NEW - Default to unknown for minor NPCs
+                },
+
+                tier: 'minor',
+                role: llmResponse.demographics.archetype_role,
+
+                // Demographics
+                demographics: {
+                    age_hint: llmResponse.demographics.age_group || "Adult",
+                    gender: llmResponse.demographics.gender,
+                    race: "Human" // Default for minor unless specified
+                },
+
+                // Context
+                concept: request.archetype_role,
+                reason_for_presence: llmResponse.reason_for_presence,
+
+                // Appearance
+                visual_description: llmResponse.visual_description,
+
+                // Performance
+                speech_style: {
+                    reference: llmResponse.speech_style.reference,
+                    tone_tags: llmResponse.speech_style.tone_tags
+                },
+
+                // Simulation
+                state: {
+                    current_location_id: groundTruth.player.current_location_id || groundTruth.player.context?.location || 'unknown',
+                    status: 'active',
+                    current_action: llmResponse.state.current_action,
+                    attention_focus: 'environment',
+                    disposition: llmResponse.social?.base_disposition ? [llmResponse.social.base_disposition] : ['neutral'],
+                    short_term_goal: llmResponse.state.current_action || 'Idle'
+                },
+                simulation: {
+                    strength: 5, // Average
+                    willpower: 5
+                },
+                inventory: [],
+
+                // Deep Fields (Minor NPCs have minimal depth)
+                psychology: {
+                    motivation: llmResponse.reason_for_presence,
+                    flaw: "None",
+                    social_strategy: llmResponse.social.base_disposition,
+                    essence_summary: `${llmResponse.vibe_hint}.`
+                },
+
+                // Meta
+                created_by: 'director_minor_v5',
+                player_relevance: 1,
+                promotion_candidate: false,
+
+                // Legacy / Computed
+                data_json: JSON.stringify(llmResponse)
+            };
+
+            console.log(`[CASTING DIRECTOR] ✓ Cast Minor NPC: ${npc.name.display}`);
+            return npc;
+
+        } catch (error) {
+            console.error('[CASTING DIRECTOR] ❌ Minor NPC creation failed:', error);
+            // Fallback
+            return {
+                id: `npc-${uuidv4()}`,
+                created_turn: groundTruth.narrative_history.length + 1,
+                name: { first: "Stranger", display: `Stranger (${request.archetype_role})` },
+                tier: 'minor',
+                role: request.archetype_role,
+                demographics: { age_hint: "Unknown", gender: "Unknown", race: "Unknown" },
+                concept: request.archetype_role,
+                reason_for_presence: "Just passing through.",
+                visual_description: "A background extra.",
+                speech_style: { reference: "Normal", tone_tags: ["Bland"] },
+                state: { current_location_id: 'unknown', status: 'active', current_action: 'Exist', disposition: ['neutral'], short_term_goal: 'Exist' },
+                simulation: {},
+                inventory: [],
+                created_by: 'fallback'
+            } as NPC;
+        }
+    }
+
+    private async createMajorNPC(
+        request: NPCRequest,
+        groundTruth: GroundTruth
+    ): Promise<NPC> {
+        const tier = request.tier || 'minor';
+        const concept = request.concept || 'Unknown NPC';
+        console.log(`[CASTING DIRECTOR] 🎭 Auditioning for ${tier.toUpperCase()} Role: ${concept}...`);
+
+        const isMajor = tier === 'major';
+        // 1. Generate 3 distinct scaffolds
+        const candidates = [
+            { id: 'A', scaffold: this.traitGenerator.generateScaffold(groundTruth.genre?.meta?.name) },
+            { id: 'B', scaffold: this.traitGenerator.generateScaffold(groundTruth.genre?.meta?.name) },
+            { id: 'C', scaffold: this.traitGenerator.generateScaffold(groundTruth.genre?.meta?.name) }
+        ];
+
+        const requestedName = request.constraints?.name || "";
+        const isOverride = (forbiddenNames as string[]).some(n => requestedName.toLowerCase().includes(n.toLowerCase()));
+
+        const forbiddenBlock = isOverride
+            ? "(Override active: Forbidden list suppressed.)"
+            : `Do NOT use forbidden names: ${forbiddenNames.join(', ')}`;
+
+        // 2. Construct Audition Prompt (V5 Update)
+        const context = `
+GAME CONTEXT:
+Genre: ${groundTruth.genre?.meta?.name || 'General Fiction'}
+Location: ${groundTruth.player.context?.location || 'Unknown'}
+
+Role Description:
+Concept: "${concept}"
+Disposition: ${request.disposition || 'neutral'}
+${request.suggested_attributes ? `Required Attributes: ${JSON.stringify(request.suggested_attributes)}` : ''}
+
+=== NAME CONSTRAINTS ===
+Do NOT use the following names: ${groundTruth.npcs.map(n => n.name.first).join(', ') || 'None'}
+${forbiddenBlock}
+
+=== AUDITION CANDIDATES ===
+${candidates.map(c => `
+CANDIDATE ${c.id}:
+${this.traitGenerator.formatScaffold(c.scaffold)}
+`).join('\n')}
+
+TASK:
+1. SELECT the candidate that best fits the concept.
+2. FLUSH OUT details using strict rules.
+
+**FACE CLAIM RULES (CRITICAL):**
+1. **MATCH BIOLOGY:** Humans match Human actors. Artificial matches Artificial.
+2. **AGE ALIGNMENT:** Match actor age to character age hint.
+3. **VOICE MATCH:** The Face Claim is primarily a VOICE REFERENCE.
+
+OUTPUT JSON FORMAT (V5 SCHEMA):
+{
+  "selected_candidate_id": "A",
+  "name": { 
+     "first": "String (e.g. 'Ethan')", 
+     "display": "String (e.g. 'Ethan Hunt')",
+     "known_to_player": boolean (True if player would recognize them or know their name, False if stranger/mysterious)
+  },
+  "demographics": {
+     "age_hint": "String (e.g. 'Mid 30s', 'Ancient')",
+     "gender": "String",
+     "race": "String (e.g. 'Human', 'Elf')"
+  },
+  "role": "String (Functional role)",
+  "concept": "String (Refine the concept)",
+  "reason_for_presence": "String (Why are they here NOW?)",
+  "visual_description": "String (Vivid, one paragraph description of appearance)",
+  "speech_style": {
+     "reference": "String (Face Claim / Voice Actor)",
+     "tone_tags": ["String", "String"]
+  },
+  "simulation": {
+     "strength": number (1-10),
+     "willpower": number (1-10),
+     "intelligence": number (1-10),
+     "charisma": number (1-10)
+  },
+  "inventory": ["String", "String"],
+  "psychology": {
+     "motivation": "String",
+     "flaw": "String",
+     "social_strategy": "String",
+     "essence_summary": "String (One line summary)"
+  },
+  "background": "String (Brief history)",
+  "relationships": {
+     "Player": "String (Relation to player, e.g. 'Stole thesis', 'Complete stranger')",
+     "KeyFaction": "String (Optional)"
+  },
+  "knowledge": ["Secret A", "Public Fact B"]
+}
+`;
+
+        try {
+            const profile = await this.gemini.generateJSON<any>(context, 'CastingDirector');
+
+            const npc: NPC = {
+                id: `npc-${uuidv4()}`,
+                created_turn: groundTruth.narrative_history.length + 1,
+
+                name: { ...profile.name, known_to_player: profile.name.known_to_player ?? true }, // Default to true for Major if unspecified
+                tier: tier,
+                role: profile.role,
+
+                demographics: profile.demographics,
+                concept: profile.concept || concept,
+                reason_for_presence: profile.reason_for_presence,
+
+                visual_description: profile.visual_description,
+                speech_style: profile.speech_style,
+
+                state: {
+                    current_location_id: groundTruth.player.current_location_id || groundTruth.player.context?.location || 'unknown',
+                    status: 'active',
+                    current_action: 'Idle',
+                    attention_focus: 'player',
+                    disposition: profile.psychology?.social_strategy ? [profile.psychology.social_strategy] : ['neutral'],
+                    short_term_goal: 'Idle'
+                },
+
+                simulation: profile.simulation,
+                inventory: profile.inventory || [],
+
+                background: profile.background,
+                psychology: profile.psychology,
+
+                created_by: 'director_major_v5',
+                player_relevance: isMajor ? 5 : 1,
+                promotion_candidate: false,
+
+                data_json: JSON.stringify(profile)
+            };
+
+            console.log(`[CASTING DIRECTOR] ✓ Cast ${npc.name.display} (Candidate ${profile.selected_candidate_id})`);
+            return npc;
+        } catch (error) {
+            console.error('[CASTING DIRECTOR] ❌ Audition failed, using fallback:', error);
+            // Fallback
+            return {
+                id: `npc-${uuidv4()}`,
+                created_turn: groundTruth.narrative_history.length + 1,
+                name: { first: "Stranger", display: `Stranger (${request.concept})` },
+                tier: tier,
+                role: "Unknown",
+                demographics: { age_hint: "Unknown", gender: "Unknown", race: "Unknown" },
+                concept: request.concept || "Unknown",
+                reason_for_presence: "Unknown",
+                visual_description: "A mysterious figure.",
+                speech_style: { reference: "Unknown", tone_tags: [] },
+                state: { current_location_id: 'unknown', status: 'active', current_action: 'Exist', disposition: ['neutral'], short_term_goal: 'Exist' },
+                simulation: {},
+                inventory: [],
+                created_by: 'fallback'
+            } as NPC;
+        }
+    }
+    async castFromAnchor(anchor: any, groundTruth: GroundTruth): Promise<NPC> {
+        console.log(`[CASTING DIRECTOR] ⚓ Casting from Anchor: "${anchor.description}"...`);
+
+        const request: DirectorMinorNPCRequest = {
+            archetype_role: anchor.description,
+            scene_function: "Direct Interaction with Player",
+            vibe_hint: "Reactive",
+            visual_detail_hint: anchor.context || "Matches description",
+            dialogue_style_hint: "Natural",
+            gender_hint: "Ambiguous",
+            tier: 'minor',
+            requested_by: 'jit_anchor'
+        };
+
+        return this.createMinorNPC(request, groundTruth);
+    }
+}

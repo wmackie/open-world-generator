@@ -1,0 +1,1815 @@
+{
+    "npc_traits": {
+        "CoreMotivation": [
+            {
+                "name": "Power",
+                "tags": [
+                    "ambition",
+                    "control",
+                    "proactive"
+                ]
+            },
+            {
+                "name": "Wealth",
+                "tags": [
+                    "ambition",
+                    "materialistic",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Knowledge",
+                "tags": [
+                    "intellectual",
+                    "curiosity",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Survival",
+                "tags": [
+                    "defensive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Justice",
+                "tags": [
+                    "moral",
+                    "proactive",
+                    "social",
+                    "order"
+                ]
+            },
+            {
+                "name": "Love",
+                "tags": [
+                    "emotional",
+                    "connection"
+                ]
+            },
+            {
+                "name": "Chaos",
+                "tags": [
+                    "unpredictable",
+                    "disruptive"
+                ]
+            },
+            {
+                "name": "Order",
+                "tags": [
+                    "control",
+                    "structured",
+                    "proactive"
+                ]
+            },
+            {
+                "name": "Escape",
+                "tags": [
+                    "defensive",
+                    "proactive",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Recognition",
+                "tags": [
+                    "ambition",
+                    "social",
+                    "ego"
+                ]
+            },
+            {
+                "name": "Comfort",
+                "tags": [
+                    "passive",
+                    "materialistic",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Belonging",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "connection"
+                ]
+            },
+            {
+                "name": "Freedom",
+                "tags": [
+                    "proactive",
+                    "unpredictable",
+                    "anti-authoritarian"
+                ]
+            },
+            {
+                "name": "Harmony",
+                "tags": [
+                    "social",
+                    "moral",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Mastery",
+                "tags": [
+                    "intellectual",
+                    "ambition",
+                    "proactive"
+                ]
+            },
+            {
+                "name": "Atonement",
+                "tags": [
+                    "moral",
+                    "introspective",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Creativity",
+                "tags": [
+                    "creative",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Duty",
+                "tags": [
+                    "moral",
+                    "structured",
+                    "selfless"
+                ]
+            },
+            {
+                "name": "Revenge",
+                "tags": [
+                    "aggressive",
+                    "emotional",
+                    "proactive",
+                    "destructive"
+                ]
+            },
+            {
+                "name": "Discovery",
+                "tags": [
+                    "proactive",
+                    "curiosity",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Legacy",
+                "tags": [
+                    "ambition",
+                    "social",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Redemption",
+                "tags": [
+                    "moral",
+                    "proactive",
+                    "introspective",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Connection",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "selfless"
+                ]
+            },
+            {
+                "name": "Innovation",
+                "tags": [
+                    "intellectual",
+                    "creative",
+                    "proactive",
+                    "disruptive"
+                ]
+            },
+            {
+                "name": "Tradition",
+                "tags": [
+                    "structured",
+                    "social",
+                    "order"
+                ]
+            },
+            {
+                "name": "Adventure",
+                "tags": [
+                    "proactive",
+                    "unpredictable",
+                    "curiosity",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Security",
+                "tags": [
+                    "defensive",
+                    "fear",
+                    "materialistic"
+                ]
+            },
+            {
+                "name": "Truth",
+                "tags": [
+                    "intellectual",
+                    "moral",
+                    "proactive",
+                    "curiosity"
+                ]
+            },
+            {
+                "name": "Domination",
+                "tags": [
+                    "aggressive",
+                    "control",
+                    "proactive",
+                    "social",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Protection",
+                "tags": [
+                    "defensive",
+                    "proactive",
+                    "selfless",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Understanding",
+                "tags": [
+                    "introspective",
+                    "intellectual",
+                    "emotional",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Annihilation",
+                "tags": [
+                    "aggressive",
+                    "destructive",
+                    "nihilistic",
+                    "proactive"
+                ]
+            },
+            {
+                "name": "Hedonism",
+                "tags": [
+                    "selfish",
+                    "materialistic",
+                    "physical",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Faith",
+                "tags": [
+                    "moral",
+                    "structured",
+                    "social",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Balance",
+                "tags": [
+                    "moral",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Glory",
+                "tags": [
+                    "ambition",
+                    "ego",
+                    "proactive",
+                    "social",
+                    "physical"
+                ]
+            }
+        ],
+        "PrimaryFlaw": [
+            {
+                "name": "Arrogance",
+                "tags": [
+                    "ego",
+                    "control"
+                ]
+            },
+            {
+                "name": "Paranoia",
+                "tags": [
+                    "defensive",
+                    "anti-social",
+                    "fear",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Greed",
+                "tags": [
+                    "materialistic",
+                    "selfish",
+                    "ambition"
+                ]
+            },
+            {
+                "name": "Cowardice",
+                "tags": [
+                    "defensive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Naivete",
+                "tags": [
+                    "unaware"
+                ]
+            },
+            {
+                "name": "Prejudice",
+                "tags": [
+                    "judgmental",
+                    "aggressive"
+                ]
+            },
+            {
+                "name": "Reckless",
+                "tags": [
+                    "unpredictable",
+                    "destructive"
+                ]
+            },
+            {
+                "name": "Vindictive",
+                "tags": [
+                    "aggressive",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Apathetic",
+                "tags": [
+                    "passive",
+                    "anti-social",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Obsessive",
+                "tags": [
+                    "introspective",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Impulsive",
+                "tags": [
+                    "unpredictable",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Stubborn",
+                "tags": [
+                    "passive",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Insecure",
+                "tags": [
+                    "introspective",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Cynical",
+                "tags": [
+                    "anti-social",
+                    "intellectual",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Judgmental",
+                "tags": [
+                    "moral",
+                    "control"
+                ]
+            },
+            {
+                "name": "Resentful",
+                "tags": [
+                    "passive",
+                    "emotional",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Indecisive",
+                "tags": [
+                    "fear",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Narcissistic",
+                "tags": [
+                    "ego",
+                    "selfish",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Hedonistic",
+                "tags": [
+                    "selfish",
+                    "materialistic",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Conniving",
+                "tags": [
+                    "intellectual",
+                    "selfish",
+                    "manipulative"
+                ]
+            },
+            {
+                "name": "Cruel",
+                "tags": [
+                    "aggressive",
+                    "destructive",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Delusional",
+                "tags": [
+                    "unaware",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Codependent",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Vain",
+                "tags": [
+                    "ego",
+                    "materialistic",
+                    "social"
+                ]
+            },
+            {
+                "name": "Melodramatic",
+                "tags": [
+                    "emotional",
+                    "social",
+                    "ego"
+                ]
+            },
+            {
+                "name": "Scheming",
+                "tags": [
+                    "intellectual",
+                    "control",
+                    "manipulative"
+                ]
+            },
+            {
+                "name": "Perfectionist",
+                "tags": [
+                    "control",
+                    "introspective",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Nihilistic",
+                "tags": [
+                    "anti-social",
+                    "intellectual",
+                    "passive",
+                    "destructive"
+                ]
+            },
+            {
+                "name": "Lecherous",
+                "tags": [
+                    "selfish",
+                    "physical",
+                    "social"
+                ]
+            },
+            {
+                "name": "Gullible",
+                "tags": [
+                    "unaware"
+                ]
+            },
+            {
+                "name": "Fanatical",
+                "tags": [
+                    "aggressive",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Gluttonous",
+                "tags": [
+                    "selfish",
+                    "materialistic",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Slothful",
+                "tags": [
+                    "passive",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Envious",
+                "tags": [
+                    "emotional",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Sanctimonious",
+                "tags": [
+                    "moral",
+                    "judgmental",
+                    "ego",
+                    "social"
+                ]
+            },
+            {
+                "name": "Martyr Complex",
+                "tags": [
+                    "emotional",
+                    "social",
+                    "manipulative"
+                ]
+            },
+            {
+                "name": "Treacherous",
+                "tags": [
+                    "selfish",
+                    "manipulative",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Morbid",
+                "tags": [
+                    "introspective",
+                    "anti-social",
+                    "passive",
+                    "destructive"
+                ]
+            },
+            {
+                "name": "Dogmatic",
+                "tags": [
+                    "control",
+                    "structured",
+                    "aggressive",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Sycophantic",
+                "tags": [
+                    "social",
+                    "fear",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Superstitious",
+                "tags": [
+                    "fear",
+                    "unaware"
+                ]
+            },
+            {
+                "name": "Miserly",
+                "tags": [
+                    "materialistic",
+                    "selfish",
+                    "defensive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Frivolous",
+                "tags": [
+                    "unpredictable",
+                    "materialistic",
+                    "unaware"
+                ]
+            }
+        ],
+        "SocialStrategy": [
+            {
+                "name": "Intellectual/Analytical",
+                "tags": [
+                    "intellectual",
+                    "non-physical",
+                    "strategic"
+                ]
+            },
+            {
+                "name": "Charming/Flirtatious",
+                "tags": [
+                    "social",
+                    "manipulative",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Intimidating/Assertive",
+                "tags": [
+                    "aggressive",
+                    "control"
+                ]
+            },
+            {
+                "name": "People-Pleasing/Agreeable",
+                "tags": [
+                    "social",
+                    "passive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Aloof/Detached",
+                "tags": [
+                    "anti-social",
+                    "introspective",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Manipulative/Deceptive",
+                "tags": [
+                    "intellectual",
+                    "selfish",
+                    "manipulative"
+                ]
+            },
+            {
+                "name": "Nurturing/Supportive",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "selfless"
+                ]
+            },
+            {
+                "name": "Goofy/Joking",
+                "tags": [
+                    "social",
+                    "unpredictable",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Provocative/Antagonistic",
+                "tags": [
+                    "aggressive",
+                    "social",
+                    "disruptive"
+                ]
+            },
+            {
+                "name": "Scholarly/Pedantic",
+                "tags": [
+                    "intellectual",
+                    "social",
+                    "control"
+                ]
+            },
+            {
+                "name": "Honest/Forthright",
+                "tags": [
+                    "social",
+                    "moral"
+                ]
+            },
+            {
+                "name": "Mysterious/Cryptic",
+                "tags": [
+                    "anti-social",
+                    "intellectual",
+                    "control"
+                ]
+            },
+            {
+                "name": "Transactional/Pragmatic",
+                "tags": [
+                    "selfish",
+                    "intellectual",
+                    "materialistic"
+                ]
+            },
+            {
+                "name": "Victimizing/Pity-Seeking",
+                "tags": [
+                    "manipulative",
+                    "social",
+                    "emotional",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Gossipy/Information-Trading",
+                "tags": [
+                    "social",
+                    "manipulative",
+                    "curiosity"
+                ]
+            },
+            {
+                "name": "Rebellious/Contrarian",
+                "tags": [
+                    "anti-authoritarian",
+                    "disruptive"
+                ]
+            },
+            {
+                "name": "Stoic/Unflappable",
+                "tags": [
+                    "passive",
+                    "introspective",
+                    "control",
+                    "non-physical"
+                ]
+            },
+            {
+                "name": "Mediating/Peace-Making",
+                "tags": [
+                    "social",
+                    "moral"
+                ]
+            },
+            {
+                "name": "Overbearing/Commanding",
+                "tags": [
+                    "control",
+                    "aggressive",
+                    "social"
+                ]
+            },
+            {
+                "name": "Humble/Self-Deprecating",
+                "tags": [
+                    "social",
+                    "passive",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Competitive/Challenging",
+                "tags": [
+                    "aggressive",
+                    "social"
+                ]
+            },
+            {
+                "name": "Helpful/Service-Oriented",
+                "tags": [
+                    "social",
+                    "selfless"
+                ]
+            },
+            {
+                "name": "Boundary-Pushing/Testing",
+                "tags": [
+                    "aggressive",
+                    "social",
+                    "disruptive"
+                ]
+            },
+            {
+                "name": "Ingratiating/Fawning",
+                "tags": [
+                    "social",
+                    "fear",
+                    "manipulative"
+                ]
+            },
+            {
+                "name": "Lecturing/Didactic",
+                "tags": [
+                    "intellectual",
+                    "control",
+                    "social",
+                    "ego"
+                ]
+            },
+            {
+                "name": "Self-Effacing/Invisible",
+                "tags": [
+                    "passive",
+                    "anti-social",
+                    "fear",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Performative/Attention-Seeking",
+                "tags": [
+                    "social",
+                    "ego",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Withdrawn/Avoidant",
+                "tags": [
+                    "anti-social",
+                    "passive",
+                    "fear",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Earnest/Sincere",
+                "tags": [
+                    "social",
+                    "moral",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Calculating/Strategic",
+                "tags": [
+                    "intellectual",
+                    "control",
+                    "selfish"
+                ]
+            },
+            {
+                "name": "Impulsive/Unfiltered",
+                "tags": [
+                    "unpredictable",
+                    "social",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Defiant/Confrontational",
+                "tags": [
+                    "aggressive",
+                    "anti-authoritarian",
+                    "social"
+                ]
+            },
+            {
+                "name": "Prudish/Proper",
+                "tags": [
+                    "structured",
+                    "judgmental",
+                    "defensive",
+                    "social"
+                ]
+            },
+            {
+                "name": "Rigid/Rule-Bound",
+                "tags": [
+                    "structured",
+                    "control",
+                    "passive",
+                    "order"
+                ]
+            },
+            {
+                "name": "Fastidious/Fussy",
+                "tags": [
+                    "control",
+                    "structured",
+                    "passive",
+                    "judgmental"
+                ]
+            },
+            {
+                "name": "Guarded/Evasive",
+                "tags": [
+                    "defensive",
+                    "anti-social",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Observant/Watchful",
+                "tags": [
+                    "defensive",
+                    "introspective",
+                    "passive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Suspicious/Questioning",
+                "tags": [
+                    "defensive",
+                    "anti-social",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Isolated/Hermit-Like",
+                "tags": [
+                    "anti-social",
+                    "passive",
+                    "defensive",
+                    "introspective"
+                ]
+            }
+        ],
+        "VerbalStyle": [
+            {
+                "name": "Terse/Clipped",
+                "tags": [
+                    "direct",
+                    "control",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Verbose/Academic",
+                "tags": [
+                    "intellectual",
+                    "control"
+                ]
+            },
+            {
+                "name": "Sarcastic/Witty",
+                "tags": [
+                    "intellectual",
+                    "aggressive",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Formal/Polite",
+                "tags": [
+                    "structured",
+                    "social",
+                    "control"
+                ]
+            },
+            {
+                "name": "Blunt/Direct",
+                "tags": [
+                    "direct",
+                    "aggressive"
+                ]
+            },
+            {
+                "name": "Quiet/Hesitant",
+                "tags": [
+                    "passive",
+                    "fear",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Rambling/Tangential",
+                "tags": [
+                    "unpredictable",
+                    "unaware"
+                ]
+            },
+            {
+                "name": "Melodramatic/Exaggerated",
+                "tags": [
+                    "emotional",
+                    "ego",
+                    "social"
+                ]
+            },
+            {
+                "name": "Understated/Dry Wit",
+                "tags": [
+                    "intellectual",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Mumbling/Soft-Spoken",
+                "tags": [
+                    "passive",
+                    "fear",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Whimsical/Playful",
+                "tags": [
+                    "unpredictable",
+                    "creative",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Cryptic/Vague",
+                "tags": [
+                    "indirect",
+                    "control",
+                    "manipulative",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Self-Aggrandizing",
+                "tags": [
+                    "ego",
+                    "social"
+                ]
+            },
+            {
+                "name": "Fast-Talking/Interruptive",
+                "tags": [
+                    "aggressive",
+                    "social"
+                ]
+            },
+            {
+                "name": "Deadpan/Ironic",
+                "tags": [
+                    "passive",
+                    "intellectual",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Mocking/Superior",
+                "tags": [
+                    "aggressive",
+                    "ego",
+                    "judgmental"
+                ]
+            },
+            {
+                "name": "Slang-Laden/Overfamiliar",
+                "tags": [
+                    "social",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Nearly Silent",
+                "tags": [
+                    "anti-social",
+                    "passive",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Booming/Theatrical",
+                "tags": [
+                    "ego",
+                    "social"
+                ]
+            },
+            {
+                "name": "Philosophical/Metaphorical",
+                "tags": [
+                    "intellectual",
+                    "introspective",
+                    "indirect"
+                ]
+            },
+            {
+                "name": "Gravelly/Raspy",
+                "tags": [
+                    "physical"
+                ]
+            },
+            {
+                "name": "Smooth/Silken",
+                "tags": [
+                    "manipulative",
+                    "disarming",
+                    "social"
+                ]
+            },
+            {
+                "name": "Jittery/Excitable",
+                "tags": [
+                    "emotional",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Apologetic/Self-Correcting",
+                "tags": [
+                    "passive",
+                    "fear",
+                    "social"
+                ]
+            },
+            {
+                "name": "Condescending/Patronizing",
+                "tags": [
+                    "aggressive",
+                    "ego",
+                    "judgmental"
+                ]
+            },
+            {
+                "name": "Breathless/Run-On",
+                "tags": [
+                    "emotional",
+                    "unpredictable",
+                    "social"
+                ]
+            },
+            {
+                "name": "Poetic/Lyrical",
+                "tags": [
+                    "creative",
+                    "emotional",
+                    "indirect",
+                    "intellectual",
+                    "fanciful"
+                ]
+            },
+            {
+                "name": "Profane/Crude",
+                "tags": [
+                    "aggressive",
+                    "anti-authoritarian"
+                ]
+            },
+            {
+                "name": "Nervous Laughter",
+                "tags": [
+                    "fear",
+                    "social",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Interrogative/Question-Heavy",
+                "tags": [
+                    "intellectual",
+                    "curiosity"
+                ]
+            },
+            {
+                "name": "Affectionate/Endearment-Laden",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "disarming"
+                ]
+            }
+        ],
+        "Physicality_BodyLanguage": [
+            {
+                "name": "Cat-like/Predatory",
+                "tags": [
+                    "aggressive",
+                    "physical",
+                    "control"
+                ]
+            },
+            {
+                "name": "Nervous/Twitchy",
+                "tags": [
+                    "fear",
+                    "unpredictable",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Statuesque/Imposing",
+                "tags": [
+                    "control",
+                    "physical",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Bouncy/Energetic",
+                "tags": [
+                    "unpredictable",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Calculating/Observant",
+                "tags": [
+                    "intellectual",
+                    "passive",
+                    "control",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Graceful/Deliberate",
+                "tags": [
+                    "control",
+                    "confident",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Clumsy/Awkward",
+                "tags": [
+                    "unaware",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Still/Minimalist",
+                "tags": [
+                    "passive",
+                    "control",
+                    "introspective",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Expansive/Open",
+                "tags": [
+                    "social",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Closed-Off/Guarded",
+                "tags": [
+                    "defensive",
+                    "fear",
+                    "anti-social",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Intense/Unwavering Gaze",
+                "tags": [
+                    "control",
+                    "aggressive",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Constantly Fidgeting",
+                "tags": [
+                    "fear",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Theatrical Gestures",
+                "tags": [
+                    "ego",
+                    "social",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Seductive/Slow",
+                "tags": [
+                    "manipulative",
+                    "physical",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Restless Energy",
+                "tags": [
+                    "unpredictable",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Dominating Gestures",
+                "tags": [
+                    "aggressive",
+                    "control",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Hyper-Animated Face",
+                "tags": [
+                    "emotional",
+                    "social"
+                ]
+            },
+            {
+                "name": "Deadpan/Flat Affect",
+                "tags": [
+                    "passive",
+                    "anti-social",
+                    "introspective",
+                    "control"
+                ]
+            },
+            {
+                "name": "Mirroring Behavior",
+                "tags": [
+                    "manipulative",
+                    "social",
+                    "intellectual"
+                ]
+            },
+            {
+                "name": "Preening/Display-Oriented",
+                "tags": [
+                    "ego",
+                    "social",
+                    "materialistic"
+                ]
+            },
+            {
+                "name": "Lethargic/Sluggish",
+                "tags": [
+                    "passive",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Rigid/Tense",
+                "tags": [
+                    "defensive",
+                    "fear",
+                    "control",
+                    "structured"
+                ]
+            },
+            {
+                "name": "Fluid/Relaxed",
+                "tags": [
+                    "confident",
+                    "passive",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Prowling/Restless Pacing",
+                "tags": [
+                    "physical",
+                    "unpredictable",
+                    "aggressive"
+                ]
+            },
+            {
+                "name": "Hunched/Protective Posture",
+                "tags": [
+                    "defensive",
+                    "fear",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Languid/Lazy Movements",
+                "tags": [
+                    "passive",
+                    "physical",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Precise/Economical Gestures",
+                "tags": [
+                    "control",
+                    "intellectual",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Sprawling/Space-Taking",
+                "tags": [
+                    "confident",
+                    "aggressive",
+                    "social",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Quick/Darting Movements",
+                "tags": [
+                    "fear",
+                    "unpredictable",
+                    "physical"
+                ]
+            },
+            {
+                "name": "Floating/Dreamy Quality",
+                "tags": [
+                    "passive",
+                    "introspective",
+                    "unaware"
+                ]
+            },
+            {
+                "name": "Mechanical/Robotic",
+                "tags": [
+                    "control",
+                    "structured",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Invasive/Close-Talking",
+                "tags": [
+                    "social",
+                    "aggressive",
+                    "unaware",
+                    "physical"
+                ]
+            }
+        ],
+        "EmotionalBaseline": [
+            {
+                "name": "Melancholic",
+                "tags": [
+                    "introspective",
+                    "passive",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Cheerful",
+                "tags": [
+                    "social",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Irritable",
+                "tags": [
+                    "aggressive",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Serene",
+                "tags": [
+                    "passive",
+                    "control",
+                    "confident"
+                ]
+            },
+            {
+                "name": "Anxious",
+                "tags": [
+                    "fear",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Bitter",
+                "tags": [
+                    "emotional",
+                    "passive",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Excitable",
+                "tags": [
+                    "emotional",
+                    "unpredictable"
+                ]
+            },
+            {
+                "name": "Sardonic",
+                "tags": [
+                    "intellectual",
+                    "passive",
+                    "anti-social"
+                ]
+            },
+            {
+                "name": "Warm",
+                "tags": [
+                    "social",
+                    "emotional",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Cold",
+                "tags": [
+                    "anti-social",
+                    "control",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Volatile",
+                "tags": [
+                    "emotional",
+                    "unpredictable",
+                    "aggressive"
+                ]
+            },
+            {
+                "name": "Stoic",
+                "tags": [
+                    "passive",
+                    "control",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Manic",
+                "tags": [
+                    "unpredictable",
+                    "emotional"
+                ]
+            },
+            {
+                "name": "Despondent",
+                "tags": [
+                    "passive",
+                    "emotional",
+                    "introspective"
+                ]
+            },
+            {
+                "name": "Intense",
+                "tags": [
+                    "emotional",
+                    "control"
+                ]
+            },
+            {
+                "name": "Carefree",
+                "tags": [
+                    "unpredictable",
+                    "disarming",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Suspicious",
+                "tags": [
+                    "defensive",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Wistful",
+                "tags": [
+                    "introspective",
+                    "emotional",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Cynical",
+                "tags": [
+                    "intellectual",
+                    "anti-social",
+                    "passive"
+                ]
+            },
+            {
+                "name": "Earnest",
+                "tags": [
+                    "social",
+                    "moral"
+                ]
+            },
+            {
+                "name": "Weary",
+                "tags": [
+                    "passive",
+                    "introspective",
+                    "defensive"
+                ]
+            },
+            {
+                "name": "Playful",
+                "tags": [
+                    "social",
+                    "unpredictable",
+                    "disarming"
+                ]
+            },
+            {
+                "name": "Guarded",
+                "tags": [
+                    "defensive",
+                    "control",
+                    "fear"
+                ]
+            },
+            {
+                "name": "Zealous",
+                "tags": [
+                    "emotional",
+                    "aggressive"
+                ]
+            }
+        ]
+    },
+    "incompatibility_rules": [
+        [
+            "proactive",
+            "passive"
+        ],
+        [
+            "proactive",
+            "reactive"
+        ],
+        [
+            "aggressive",
+            "passive"
+        ],
+        [
+            "social",
+            "anti-social"
+        ],
+        [
+            "fear",
+            "confident"
+        ],
+        [
+            "selfish",
+            "selfless"
+        ],
+        [
+            "moral",
+            "destructive"
+        ],
+        [
+            "ego",
+            "selfless"
+        ],
+        [
+            "control",
+            "unpredictable"
+        ],
+        [
+            "structured",
+            "disruptive"
+        ],
+        [
+            "intellectual",
+            "unaware"
+        ],
+        [
+            "order",
+            "chaos"
+        ],
+        [
+            "direct",
+            "indirect"
+        ],
+        [
+            "defensive",
+            "aggressive"
+        ],
+        [
+            "introspective",
+            "unaware"
+        ],
+        [
+            "materialistic",
+            "selfless"
+        ],
+        [
+            "nihilistic",
+            "moral"
+        ],
+        [
+            "curiosity",
+            "unaware"
+        ],
+        [
+            "connection",
+            "anti-social"
+        ],
+        [
+            "ambition",
+            "passive"
+        ],
+        [
+            "physical",
+            "non-physical"
+        ],
+        [
+            "strategic",
+            "unpredictable"
+        ],
+        [
+            "cheerful",
+            "bitter"
+        ],
+        [
+            "cheerful",
+            "nihilistic"
+        ],
+        [
+            "serene",
+            "volatile"
+        ],
+        [
+            "serene",
+            "unpredictable"
+        ],
+        [
+            "anxious",
+            "confident"
+        ],
+        [
+            "carefree",
+            "fear"
+        ],
+        [
+            "playful",
+            "bitter"
+        ],
+        [
+            "earnest",
+            "cynical"
+        ],
+        [
+            "warm",
+            "cold"
+        ],
+        [
+            "stoic",
+            "emotional"
+        ],
+        [
+            "manic",
+            "serene"
+        ],
+        [
+            "despondent",
+            "cheerful"
+        ],
+        [
+            "zealous",
+            "apathetic"
+        ],
+        [
+            "anti-authoritarian",
+            "structured"
+        ],
+        [
+            "anti-authoritarian",
+            "order"
+        ],
+        [
+            "rebellious",
+            "dutiful"
+        ],
+        [
+            "disarming",
+            "aggressive"
+        ],
+        [
+            "disarming",
+            "intimidating"
+        ],
+        [
+            "stoic",
+            "jittery"
+        ],
+        [
+            "control",
+            "jittery"
+        ],
+        [
+            "fanciful",
+            "pragmatic"
+        ],
+        [
+            "fanciful",
+            "structured"
+        ]
+    ]
+}

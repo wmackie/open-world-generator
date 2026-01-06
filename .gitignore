@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+
+# Data / Databases
+data/
+test_output/
+*.db
+*.db-shm
+*.db-wal
+*.lance/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Old Documentation
+documentation/legacy/
+
+# Test files
+tests/
+scripts/
+
+  
+audit_logs/audit_default_session.jsonl
