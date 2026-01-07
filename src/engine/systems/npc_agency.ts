@@ -111,6 +111,24 @@ export class NPCAgencySystem {
 
             const actions = result.npc_actions;
 
+            // [FIX 7] Director Note Enforcement
+            // If an NPC had a Director trigger but returned 'IDLE', force a correction.
+            if (npcTriggers && npcTriggers.length > 0) {
+                for (const action of actions) {
+                    const trigger = npcTriggers.find(t => t.npc_id === action.npc_id);
+                    if (trigger && action.action_type === 'IDLE') {
+                        logger.warn('NPCAgencySystem', 'Director Note Violated via IDLE', { npc: action.npc_id, reason: trigger.trigger_reason });
+
+                        // Force Correction
+                        action.action_type = 'REACTIVE';
+                        action.description = action.description === 'Stays idle' ? 'Reacts to the situation' : action.description;
+                        action.goal_progress = `Director Override: ${trigger.trigger_reason}`;
+
+                        logger.info('NPCAgencySystem', 'Forced Director Override', { npc: action.npc_id });
+                    }
+                }
+            }
+
             // Meaningful Actions
             const meaningfulActions = actions.filter((a: NPCAction) => a.action_type !== 'IDLE');
 

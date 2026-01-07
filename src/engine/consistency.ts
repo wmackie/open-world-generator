@@ -19,6 +19,22 @@ export class ConsistencyEnforcer {
 
     // ... (sanitizeConsequence and validateConsequence remain unchanged)
 
+    // [FIX 8] Fallback Heuristic
+    private quickHeuristicCheck(narrative: string, entities: any[]): string[] {
+        const problems: string[] = [];
+
+        // Simple hallucination check: Mentioning names not in scene?
+        // This is fuzzy since names can be mentioned in thought.
+        // But let's check for blatant "X walks in" where X is unknown.
+
+        const narrativeLower = narrative.toLowerCase();
+        // Check for required elements that might indicate failure?
+        // Actually, let's just use it to catch empty narratives or gibberish if validation failed.
+        if (narrative.length < 10) problems.push("Narrative too short");
+
+        return problems;
+    }
+
     async sanitizeConsequence(consequence: any, contextEntities: any[]): Promise<any> {
         // ID Reconciliation: Fix Hallucinated IDs
         if (!consequence.world_state_changes) return consequence;
@@ -167,7 +183,15 @@ export class ConsistencyEnforcer {
 
         } catch (e: any) {
             logger.error('ConsistencyEnforcer', 'State Validation Failed (LLM Error)', { error: e.message });
-            return { valid: true }; // Fail open
+
+            // [FIX 8] Heuristic Fallback
+            // If LLM fails, we run basic checks. If they pass, we assume valid.
+            const heuristicIssues = this.quickHeuristicCheck(narrative, presentEntities);
+            if (heuristicIssues.length > 0) {
+                return { valid: false, reason: `LLM Error + Heuristic Fail: ${heuristicIssues.join(', ')}` };
+            }
+
+            return { valid: true }; // Fail Open if heuristics pass
         }
     }
 

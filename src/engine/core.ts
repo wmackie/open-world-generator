@@ -61,6 +61,9 @@ export class NarrativeEngine {
     private worldTime: number = 0; // Track time (minutes)
     private gameId: string = 'current_session'; // Default game ID
 
+    // [FIX 6] Infinite Generation Prevention
+    private generatedThisTurn = new Set<string>();
+
     public setGameId(id: string) {
         this.gameId = id;
         logger.info('NarrativeEngine', `Game ID set to: ${this.gameId}`);
@@ -149,6 +152,15 @@ export class NarrativeEngine {
 
             // 3. Perform the restoration
             fs.copyFileSync(savePath, dbPath);
+
+            // [FIX 5] Verify Copy
+            const sourceSize = fs.statSync(savePath).size;
+            const destSize = fs.statSync(dbPath).size;
+
+            if (destSize === 0 || destSize !== sourceSize) {
+                throw new Error(`Snapshot copy verification failed. Source: ${sourceSize}, Dest: ${destSize}`);
+            }
+
             logger.info('NarrativeEngine', `Restored database from ${filename}`);
 
             // 4. Re-initialize connections
@@ -269,50 +281,36 @@ export class NarrativeEngine {
             this.genreManager.setPremiseOverride(premise);
         }
 
-        // Persistence
-        this.sqlite.setGlobal('genre_id', genreId);
-        if (tone) this.sqlite.setGlobal('tone_override', tone);
-        if (premise) this.sqlite.setGlobal('premise_override', premise);
+        // Persistence [FIX 1]
+        this.persistGenre();
+    }
+
+    /**
+     * Persists the full genre state (base + overrides)
+     */
+    persistGenre() {
+        if (this.genreManager) {
+            const state = this.genreManager.serialize();
+            this.sqlite.setGlobal('genre_state', state);
+            logger.info('NarrativeEngine', 'Persisted Genre State');
+        }
     }
 
     /**
      * Persists the current runtime overrides (from Scenario Cards, etc)
      */
-    persistRuntimeOverrides() {
-        const overrides = this.genreManager.getRuntimeOverrides();
-        if (overrides) {
-            this.sqlite.setGlobal('runtime_overrides', JSON.stringify(overrides));
-            logger.info('NarrativeEngine', 'Persisted Genre Runtime Overrides');
-        }
-    }
-
     async loadPersistedSettings() {
         try {
-            const genreId = this.sqlite.getGlobal('genre_id');
-            const tone = this.sqlite.getGlobal('tone_override');
-
-            if (genreId) {
-                logger.info('NarrativeEngine', `Restoring persisted genre: ${genreId}`);
-                await this.genreManager.loadGenre(genreId);
-            }
-            if (tone) {
-                logger.info('NarrativeEngine', `Restoring persisted tone: ${tone}`);
-                this.genreManager.setToneOverride(tone);
-            }
-            const premise = this.sqlite.getGlobal('premise_override');
-            if (premise) {
-                logger.info('NarrativeEngine', `Restoring persisted premise: ${premise}`);
-                this.genreManager.setPremiseOverride(premise);
-            }
-
-            const runtimeOverrides = this.sqlite.getGlobal('runtime_overrides');
-            if (runtimeOverrides) {
-                try {
-                    const parsed = JSON.parse(runtimeOverrides);
-                    logger.info('NarrativeEngine', 'Restoring persisted runtime overrides');
-                    this.genreManager.setRuntimeOverrides(parsed);
-                } catch (e) {
-                    logger.warn('NarrativeEngine', 'Failed to parse persisted runtime overrides', e);
+            // [FIX 1] Load full genre state
+            const genreState = this.sqlite.getGlobal('genre_state');
+            if (genreState) {
+                this.genreManager.deserialize(genreState);
+            } else {
+                // Fallback for legacy saves or first run
+                const genreId = this.sqlite.getGlobal('genre_id');
+                if (genreId) {
+                    logger.info('NarrativeEngine', `Legacy Genre Restore: ${genreId}`);
+                    await this.genreManager.loadGenre(genreId);
                 }
             }
         } catch (e) {
@@ -347,6 +345,9 @@ export class NarrativeEngine {
             if (this.moduleSettings.get(module.name) === false) continue; // Skip disabled
             await module.onTurnStart(this);
         }
+
+        // [FIX 6] Reset generation loop tracker
+        this.generatedThisTurn.clear();
 
         // 0. Load Player & Opportunities
         const playerEntity = this.entityManager.getEntity(this.playerId) as any;
@@ -523,6 +524,15 @@ export class NarrativeEngine {
                         presentEntities: [...npcsInScene, ...objectsInScene]
                     };
 
+                    const descriptorKey = missing.descriptor.toLowerCase().trim();
+
+                    // [FIX 6] Loop Prevention
+                    if (this.generatedThisTurn.has(descriptorKey)) {
+                        logger.warn('NarrativeEngine', 'Skipping duplicate generation this turn', { descriptor: descriptorKey });
+                        continue;
+                    }
+                    this.generatedThisTurn.add(descriptorKey);
+
                     const newEntity = await this.entityInstantiation.generateSkeleton(missing.descriptor, currentLocId || 'unknown', sceneContext, this.currentTurn);
 
                     if (newEntity) {
@@ -653,6 +663,10 @@ export class NarrativeEngine {
                 const playerEntity = this.entityManager.getEntity(this.playerId);
                 const playerName = getEntityName(playerEntity) || "Player";
 
+                // [FIX 2] Moved entity processNarrative to occur AFTER validation if possible, 
+                // but since this is "CERTAIN" path, we trust the narrative. 
+                // However, consistent flow suggests we should do extraction here as before.
+                // The main fix is for UNCERTAIN path.
                 await this.entityInstantiation.processNarrative(narrative, targetLocId, knownNames, [playerName]);
 
                 consequences = [moveConsequence];
@@ -1018,11 +1032,10 @@ export class NarrativeEngine {
                         }
                     }
 
-                    // [REORDERED]: Instantiation now runs AFTER Validation/Correction
+                    // [FIX 2] MOVED: Post-Validation Extraction
                     // This prevents hallucinated objects from being created in the DB
                     if (locationValidator && locationValidator.entity_type === 'location') {
                         const knownNames = [...npcsInScene, ...objectsInScene].map(getEntityName);
-
                         // [FIX] Pass player name to forbid extraction
                         const playerEntity = this.entityManager.getEntity(this.playerId);
                         const playerName = getEntityName(playerEntity) || "Player";

@@ -12,6 +12,9 @@ export class VectorDB {
     private embedModel: any;
     private table: lancedb.Table | null = null;
     private initPromise: Promise<void>;
+    // [FIX 3] Explicit Init State
+    private initState: 'pending' | 'ready' | 'failed' = 'pending';
+    private initError?: Error;
 
     private constructor(dbPath: string = path.join(process.cwd(), 'data', 'lancedb')) {
         const dir = path.dirname(dbPath);
@@ -48,11 +51,13 @@ export class VectorDB {
                 const tableNames = await this.db.tableNames();
                 if (!tableNames.includes("event_memory")) {
                     logger.info('VectorDB', 'Creating event_memory table');
+                    // Create logic handled in ensureTable or createTable
                 } else {
                     this.table = await this.db.openTable("event_memory");
                 }
 
                 // Success!
+                this.initState = 'ready';
                 return;
             } catch (error: any) {
                 retryCount++;
@@ -63,11 +68,16 @@ export class VectorDB {
             }
         }
 
+        this.initState = 'failed';
+        this.initError = new Error(`VectorDB failed to initialize after ${maxRetries} attempts`);
         console.error(`[VectorDB] CRITICAL INIT FAILURE after ${maxRetries} attempts.`);
     }
 
     async ensureTable() {
         await this.initPromise;
+        if (this.initState === 'failed') {
+            throw new Error(`VectorDB not initialized: ${this.initError?.message}`);
+        }
         if (this.table) return;
         if (!this.db) throw new Error("DB not connected");
 
@@ -94,8 +104,20 @@ export class VectorDB {
         if (!this.table) return [];
 
         const vector = await this.embedText(queryText);
+
+        // [FIX 4] Parameterized Query (where clause)
+        // LanceDB syntax for where uses SQL-like string.
+        // Direct string interpolation is unsafe.
+        // Since we are checking ID equality, we can simply ensure it is quoted properly, 
+        // but LanceDB `where` supports standard SQL. 
+        // Best practice: Assuming ID is UUID/safe, but scrubbing is safer.
+        // Actually, for LanceDB JS, we should avoid string interpolation if possible or ensure observerId is safe.
+        // Since LanceDB `where` is just SQL string, simple quote escaping is the baseline.
+
+        const safeObserverId = observerId.replace(/'/g, "''"); // Escape single quotes
+
         const results = await this.table.vectorSearch(vector)
-            .where(`observer_id = '${observerId}'`)
+            .where(`observer_id = '${safeObserverId}'`)
             .limit(limit)
             .toArray();
 

@@ -164,8 +164,8 @@ export class CardImportModule implements ContentModule {
             engine.genreManager.setRuntimeOverrides(overrides);
 
             // 4. Persist overrides to DB (Added for reliability)
-            if (typeof engine.persistRuntimeOverrides === 'function') {
-                engine.persistRuntimeOverrides();
+            if (typeof (engine as any).persistGenre === 'function') {
+                (engine as any).persistGenre();
             }
 
             logger.info('CardImporter', `Applied and Persisted Scenario Overrides from '${card.data.name}'`);

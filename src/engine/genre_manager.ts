@@ -7,7 +7,7 @@ export class GenreManager {
     private currentGenre: GenreRules | null = null;
     private toneOverride: string | null = null;
     private premiseOverride: string | null = null;
-    private runtimeOverrides: Partial<GenreRules> | null = null; // Track explicit overrides for serialization
+    // Removed runtimeOverrides/compiledGenre/overrideVersion - simple state now
     private genresPath: string;
 
     // Rich Tone Mapping
@@ -40,6 +40,33 @@ export class GenreManager {
         this.premiseOverride = premise;
     }
 
+    // [FIX 1] Serialization methods
+    serialize(): string {
+        return JSON.stringify({
+            currentGenre: this.currentGenre,
+            toneOverride: this.toneOverride,
+            premiseOverride: this.premiseOverride
+        });
+    }
+
+    deserialize(json: string): boolean {
+        try {
+            const data = JSON.parse(json);
+            if (data.currentGenre) this.currentGenre = data.currentGenre; // Validate schema?
+            this.toneOverride = data.toneOverride || null;
+            this.premiseOverride = data.premiseOverride || null;
+            logger.info('GenreManager', 'Deserialized genre state');
+            return true;
+        } catch (e) {
+            logger.error('GenreManager', 'Failed to deserialize genre state', { error: e });
+            return false;
+        }
+    }
+
+    /**
+     * MUTATES the current genre rules with a deep merge.
+     * Used by Scenario Cards or Player Card Mutations.
+     */
     /**
      * MUTATES the current genre rules with a deep merge.
      * Used by Scenario Cards or Player Card Mutations.
@@ -61,33 +88,18 @@ export class GenreManager {
             if (overrides.physics.biases && this.currentGenre.physics.biases) {
                 this.currentGenre.physics.biases = { ...this.currentGenre.physics.biases, ...overrides.physics.biases };
             }
-            // Merge lists (if any other array fields exist, handle them here)
-            // Currently physics has no array fields other than what might be added later.
         }
 
-        // 3. Narrative Flavor (Tone etc is handled by specific overrides, but structural changes go here)
+        // 3. Narrative Flavor
         if (overrides.narrative_flavor) {
             this.currentGenre.narrative_flavor = { ...this.currentGenre.narrative_flavor, ...overrides.narrative_flavor };
         }
 
-        if (overrides.narrative_flavor) {
-            this.currentGenre.narrative_flavor = { ...this.currentGenre.narrative_flavor, ...overrides.narrative_flavor };
-        }
-
-        // Store for persistence
-        if (!this.runtimeOverrides) this.runtimeOverrides = {};
-        // Shallow merge of top-level keys for now (logic improvement needed for deep state tracking but sufficient for current scope)
-        this.runtimeOverrides = { ...this.runtimeOverrides, ...overrides };
-
+        // Direct mutation now - no separate tracking needed
         logger.info('GenreManager', 'Applied Runtime Overrides to Genre', { overrides: Object.keys(overrides) });
     }
 
-    /**
-     * Gets the current runtime overrides for persistence.
-     */
-    getRuntimeOverrides(): Partial<GenreRules> | null {
-        return this.runtimeOverrides;
-    }
+    // Removed getRuntimeOverrides - we serialize the whole state now
 
     /**
      * Loads a genre ruleset by filename (e.g., 'mundane')
@@ -141,7 +153,13 @@ export class GenreManager {
             if (mappedTone) {
                 toneKeywords = mappedTone;
             } else {
-                toneKeywords = [this.toneOverride];
+                // [FIX 9] Sanitize input
+                const sanitized = this.toneOverride.replace(/[^a-zA-Z0-9\s,\-]/g, '');
+                if (sanitized.length > 0) {
+                    toneKeywords = [sanitized];
+                } else {
+                    logger.warn('GenreManager', 'Invalid tone override, using default');
+                }
             }
         }
         return toneKeywords.join(', ');
@@ -163,8 +181,11 @@ export class GenreManager {
                 // Use curated list
                 toneKeywords = mappedTone;
             } else {
-                // Fallback to raw string if not in map (e.g. user defined)
-                toneKeywords = [this.toneOverride];
+                // [FIX 9] Sanitize
+                const sanitized = this.toneOverride.replace(/[^a-zA-Z0-9\s,\-]/g, '');
+                if (sanitized.length > 0) {
+                    toneKeywords = [sanitized];
+                }
             }
         }
         const toneString = toneKeywords.join(', ');
